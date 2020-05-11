@@ -1,42 +1,48 @@
 package FileManager;
 
+import utilities.Pair;
+
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Vector;
 
 public class Directory{
 
 	private File file;
-	private Vector<MP3File> mp3Files;
+	private Vector<Pair<FileDescription,File>> files;
 	
 	public Directory(File file){
 		this.file = file;
-		this.mp3Files = new Vector<MP3File>();
+		files = new Vector<Pair<FileDescription,File>>();
 	}
 
-	public Vector<MP3File> getMP3Files(){
+	public Vector<Pair<FileDescription,File>> getFiles(){
 		analyze(file);
-		return mp3Files;
+		return files;
 	}
 
 	private void analyze(File file){
-		try{
-			MP3File mp3File  = new MP3File(file);
-			mp3Files.add(mp3File);
-		} catch(Exception e){}
-
-		if(file.isFile()){
-			try{
-				MP3File mp3File = new MP3File(file);
-			} catch(Exception e){ /*System.out.println(e.getMessage());*/ }
-		}
-
-
-		if(file.isDirectory()){
-			File[] files = file.listFiles();
-			if(files.length > 0){
-				for(int i=0; i<files.length; i++){
-					analyze(files[i]);
+		if(file != null){
+			if(file.isDirectory()){
+				File[] files = file.listFiles();
+				for(int i=0; i<files.length; i++)
+				analyze(files[i]);				
+			}
+			else{
+				try{
+					String fileType = Files.probeContentType(file.toPath());
+					FileDescription fd = null;
+					if(fileType.equals("audio/mpeg")){
+						MP3File mp3File  = new MP3File(file);
+						fd = FileDescriptionBuilder.createMP3FileDescription(mp3File);
+					}
+					else if(fileType.equals("video/mp4"))
+					fd = FileDescriptionBuilder.createMP4FileDescription(file.getName(), file.length());
+					
+					if(fd != null)
+					files.add(new Pair<FileDescription,File>(fd, file));
 				}
+				catch(Exception e){}
 			}
 		}
 	}

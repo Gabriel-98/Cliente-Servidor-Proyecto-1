@@ -35,6 +35,10 @@ public class CommunicationManager implements Runnable{
 		printConnection();
 	}
 
+	public boolean isClosed(){
+		return client.isClosed();	
+	}
+
 	private void printConnection(){
 		if(connectionManager.getShowConnections())
 		System.out.println("Se conecto el cliente " + client.getInetAddress().getHostAddress() + ":" + client.getPort());
@@ -186,6 +190,10 @@ public class CommunicationManager implements Runnable{
 			client.close();
 		}
 		catch(Exception e){ System.out.println("No se pudo cerrar el socket"); }
+
+		if(connectionManager.getDisconnectService() != null)
+		connectionManager.getDisconnectService().solver(clientInformation, null);
+
 		connectionManager.deleteClient(client);
 		printDisconnection();
 	}
@@ -203,8 +211,8 @@ public class CommunicationManager implements Runnable{
 			answer.add(connectionManager.getName());
 			return answer;
 		}
-		Vector<String> newCommand = new Vector<String>(command.size()-1);
-		for(int i=1; i<command.size(); i++)
+		Vector<String> newCommand = new Vector<String>(command.size()-2);
+		for(int i=2; i<command.size(); i++)
 		newCommand.add(command.get(i));
 		
 		Service service = connectionManager.findService(command.get(0));

@@ -25,6 +25,7 @@ public class ConnectionManager implements Runnable{
 	private boolean showMessages;
 	private TreeMap<String,Service> services;
 	private TreeMap<String,ServiceConfiguration> serviceConfigurations;
+	private Service disconnectService;
 	protected boolean enableAddServices;
 
 	public ConnectionManager(String name, int port, int maxClients) throws Exception {
@@ -35,6 +36,7 @@ public class ConnectionManager implements Runnable{
 		showMessages = true;
 		services = new TreeMap<String,Service>();
 		serviceConfigurations = new TreeMap<String,ServiceConfiguration>();
+		disconnectService = null;
 		enableAddServices = true;
 		try{
 			server = new ServerSocket(port);
@@ -53,6 +55,8 @@ public class ConnectionManager implements Runnable{
 	public void setShowConnections(boolean showConnections){ this.showConnections = showConnections; }
 	public void setShowMessages(boolean showMessages){ this.showMessages = showMessages; }
 	
+	public Service getDisconnectService(){ return disconnectService; }
+	public void setDisconnectService(Service disconnectService){ this.disconnectService = disconnectService; }
 
 	public void addService(Service service){
 		if(enableAddServices)

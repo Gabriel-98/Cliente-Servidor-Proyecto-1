@@ -46,7 +46,7 @@ public class MP3File{
 		try{ fis = new FileInputStream(file); }
 		catch(Exception e){ throw new Exception("Error al abrir el archivo"); }
 
-		size = fis.available();
+		size = file.length();
 		if(size < 10)
 		throw new Exception("Archivo incompleto");
 		else{
@@ -172,23 +172,8 @@ public class MP3File{
 
 	public String getFileName(){ return fileName; }
 	public String getPath(){ return path; }
-	public String getSong(){ return song; }
+	public String getTitle(){ return song; }
 	public String getArtist(){ return artist; }
 	public String getAlbum(){ return album; }
 	public long getSize(){ return size; }
-
-	public byte[] read(int l, int r){
-		if(l > r || l < 0 || r >= size)
-		return null;
-		try{
-			FileInputStream fis = new FileInputStream(file);
-			fis.skip(l);
-
-			byte[] array = new byte[r+1-l];
-			fis.read(array);
-
-			return array;
-		}
-		catch(Exception e){ return null; }
-	}
 }
