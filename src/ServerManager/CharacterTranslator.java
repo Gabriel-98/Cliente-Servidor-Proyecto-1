@@ -9,7 +9,7 @@ public class CharacterTranslator{
 		if(c == 161) return 'I';
 		if(c == 162) return 'O';
 		if(c == 163) return 'U';
-		if(c == 164 || c == 165) return 'Ñ';
+		if(c == 164 || c == 165) return (char)165;
 		if(c <= 31 || c >= 127)
 		return 32;
 		if('a' <= c && c <= 'z')
